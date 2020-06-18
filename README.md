@@ -9,9 +9,9 @@
 In RHEL8:
 
 ```bash
-sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 ARCH=$( /bin/arch )
-subscription-manager repos --enable "codeready-builder-for-rhel-8-${ARCH}-rpms"
+sudo subscription-manager repos --enable "codeready-builder-for-rhel-8-${ARCH}-rpms"
 ```
 
 * Install parallel, jq and podman (if not installed already):
