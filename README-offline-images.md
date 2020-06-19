@@ -18,23 +18,38 @@ The only ones required are:
 ## Make the images offline
 
 ```bash
-export IMAGES="docker.io/library/nginx:1.14-alpine us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
+# Create an empty tar file to store all the images
 tar cvf image-files.tar --files-from /dev/null
-for image in ${IMAGES}; do
+for image in "${IMAGES[@]}"; do
+  # Pull the image locally
   podman pull ${image}
+  # Save the image into a tar file
   podman save > ${image##*/}.tar ${image}
+  # Append the image to the tar file
   tar rvf image-files.tar ${image##*/}.tar
+  # Remove the temporary tar file
   rm -f ${image##*/}.tar
 done
+# GZ the tar file with all the images
 gzip image-files.tar
 ```
 
+## Copy the images to the hosts
+
 ```bash
+export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
 for node in $(oc get nodes -o name); do
-  oc debug ${node} -- chroot /host sh -c 'cat > /tmp/image-files.tar.gz' <(cat image-files.tar.gz)
-  oc debug ${node} -- chroot /host sh -c 'tar xzvf /tmp/image-files.tar.gz'
-  for image in ${IMAGES}; do
-    oc debug ${node} -- chroot /host sh -c 'cat /tmp/${image##*/}.tar | podman import - ${image} && rm -f /tmp/${image##*/}.tar'
+  # Copy the tar.gz file to every host
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./image-files.tar.gz \
+    core@$(oc get ${node} -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}'):/tmp/
+  # This used to work back in the day but now it doesn't until https://github.com/openshift/oc/pull/470
+  # oc debug ${node} -- chroot /host bash -c 'cat > /tmp/image-files.tar.gz' <(cat image-files.tar.gz)
+  # Extract the tar.gz
+  oc debug ${node} -- chroot /host bash -c 'tar -C /tmp -xzf /tmp/image-files.tar.gz && rm -f /tmp/image-files.tar.gz'
+  for image in "${IMAGES[@]}"; do
+    # Import every image locally using podman import
+    oc debug ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman import - ${image} && rm -f /tmp/${image##*/}.tar"
   done
 done
 ```
