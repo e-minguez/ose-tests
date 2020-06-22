@@ -9,7 +9,6 @@ COPY *.txt /usr/local/share/ose-tests/
 
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
     yum install -y jq parallel python27-python-pip && \
-
-RUN scl enable python27 "pip install junit2html"
+    scl enable python27 "pip install junit2html"
 
 CMD ["/usr/local/bin/runtests-local.sh"]
