@@ -9,7 +9,7 @@ if [ ! -f /tests/kubeconfig ]; then
     exit 1
 fi
 
-DATE="(date +%Y%m%d-%H%M%S)"
+DATE="$(date +%Y%m%d-%H%M%S)"
 mkdir -p "${DATE}"
 
 export KUBECONFIG=/tests/kubeconfig 
