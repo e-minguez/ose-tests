@@ -1,0 +1,20 @@
+diff --git a/tests/20200622-154054/before.out b/tests/20200622-154054/after.out
+index a1c2b2d..555cff8 100644
+--- a/tests/20200622-154054/before.out
++++ b/tests/20200622-154054/after.out
+@@ -61 +61 @@
+/api/v1/namespaces/kube-system/configmaps/kube-controller-manager:[-1493037-]{+1505114+}
+@@ -180 +180 @@
+/api/v1/namespaces/openshift-apiserver-operator/configmaps/openshift-apiserver-operator-lock:[-1493005-]{+1505077+}
+@@ -262 +262 @@
+/api/v1/namespaces/openshift-authentication-operator/configmaps/cluster-authentication-operator-lock:[-1493007-]{+1505082+}
+@@ -332 +332 @@
+/api/v1/namespaces/openshift-cloud-credential-operator/configmaps/cloud-credential-operator-leader:[-1493042-]{+1505113+}
+@@ -429 +429 @@
+/api/v1/namespaces/openshift-cluster-storage-operator/configmaps/csi-snapshot-controller-operator-lock:[-1493020-]{+1505086+}
+@@ -465 +465 @@
+/api/v1/namespaces/openshift-cluster-version/configmaps/version:[-1492964-]{+1505058+}
+@@ -557 +557 @@
+/api/v1/namespaces/openshift-console-operator/configmaps/console-operator-lock:[-1493040-]{+1505112+}
+@@ -624 +624 @@
+...

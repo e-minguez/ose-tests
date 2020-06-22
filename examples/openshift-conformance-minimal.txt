@@ -1,0 +1,9 @@
+started: (0/1/119) "[sig-cli] Kubectl client Kubectl patch should add annotations for pods in rc  [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+
+started: (0/2/119) "[sig-api-machinery] Secrets should fail to create secret due to empty secret key [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+
+started: (0/3/119) "[k8s.io] Kubelet when scheduling a busybox command in a pod should print the output to logs [NodeConformance] [Conformance] [sig-node] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+
+started: (0/4/119) "[sig-apps] Deployment deployment should delete old replica sets [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+
+...

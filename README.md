@@ -1,42 +1,48 @@
-# ose-tests
+# ose-tests as non cluster-admin
 
 ## Prerequisites
 
-### Packages
+### podman
 
-* Enable epel to install some packages
+A container with the ose-tests will be executed as part of the procedure. In order to run the container, podman must be available in the host. The container will be executed with the current user permissions, there is no need to run it as root.
 
-In RHEL8:
-
-```bash
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-```
-
-* Install parallel, jq and podman (if not installed already):
+### Temporary folder to store the assets
 
 ```bash
-sudo yum install -y parallel jq podman
+export OUTPUTDIR="${HOME}/ose-tests/"
+mkdir -p "${OUTPUTDIR}"
+cd ${OUTPUTDIR}
 ```
 
 ### oc
 
-The `oc` cli should be installed/available
+The `oc` cli should be installed/available.
 
-## Add a non cluster-admin user
+### A cluster-admin kubeconfig
+
+In order to create a user and a custom role, cluster-admin permissions are required.
+
+```bash
+export KUBECONFIG=/path/to/my/cluster-admin.kubeconfig
+```
+
+### A non cluster-admin user
 
 Add a user to the cluster (this requires cluster-admin permissions). This example uses an htpasswd auth backend already created. Your mileage may vary.
 
 ```bash
-oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 -d > users.htpasswd
+oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
 
-htpasswd -bB users.htpasswd nonadmin nonadmin
+htpasswd -bB "${OUTPUTDIR}"/users.htpasswd nonadmin nonadmin
 Adding password for user nonadmin
 
-oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd --dry-run -o yaml -n openshift-config | oc replace -f -
+# Verify the file "${OUTPUTDIR}"/users.htpasswd contains at least the admin and nonadmin lines
+
+oc create secret generic htpass-secret --from-file=htpasswd="${OUTPUTDIR}"/users.htpasswd --dry-run -o yaml -n openshift-config | oc replace -f -
 secret/htpass-secret replaced
 
-# This will generate a /tmp/nonadmin.kubeconfig file
-export KUBECONFIG=./nonadmin.kubeconfig
+# This will generate a "${OUTPUTDIR}"/kubeconfig file
+export KUBECONFIG="${OUTPUTDIR}"/kubeconfig
 # Maybe you need to wait a while for the user to be created...
 oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.example.com:6443
 ```
@@ -71,11 +77,67 @@ oc adm policy add-cluster-role-to-user self-provisioner-namespaces nonadmin
 ## Run the tests
 
 ```bash
-./runtests.sh
+podman run --rm -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
-## Verify the differences
+## Explanations and files
+
+In order to run the tests as non cluster-admin, a modification in the code is needed (see [here](https://github.com/openshift/origin/issues/25084) for more information).
+
+Instead compiling your own openshift-tests binary and provide an easier method, a couple of container images have been created:
+
+* [https://quay.io/repository/eminguez/ose-tests](https://github.com/e-minguez/origin/blob/cluster-admin-not-needed/images/tests/Dockerfile.rhel). This is the same image used by the openshift-tests but using public images, `registry.redhat.io/rhel8/go-toolset:1.13` (vs `registry.svc.ci.openshift.org/ocp/builder:golang-1.13`) & `registry.redhat.io/openshift4/ose-cli:v4.4` (vs `registry.svc.ci.openshift.org/ocp/4.2:cli`)
+* [https://quay.io/repository/eminguez/ose-tests-full](Dockerfile). This image contains some scripts to make it easy the execution of the ose-tests, as well as [the lists of tests](tests-lists/) that would be executed proved to be successfully executed as non cluster-admin.
+
+### Files
 
 ```bash
-diff ./before.out ./after.out
+/home/kni/ose-tests
+├── 20200622-154054
+│   ├── after.out
+│   ├── before.out
+│   ├── diff.out
+│   ├── junit_e2e_20200622-154835.xml
+│   ├── junit_e2e_20200622-154835.xml.html
+│   └── openshift-conformance-minimal.txt
+└── kubeconfig
 ```
+
+### Tests execution
+
+1. A folder based on the date & time the container has been executed is created. `20200622-154054` in the example.
+2. A script is executed to query the API to gather all the information available to the non cluster-admin user previously created. This creates a [before.out](examples/before.out) file with a line per object as `/<api-path>/<resource>:<resourceversion>`
+3. For every test suite in the [tests-lists](tests-lists/) folder, the `openshift-tests` binary is executed. The output is stored in a file based on the tests suite that has been executed, like [openshift-conformance-minimal.txt](examples/openshift-conformance-minimal.txt)
+4. After the tests are executed, a script is executed to query the API to gather all the information available to the non cluster-admin user previously created. This creates an [after.out](examples/after.out) file with the same content than the [before.out](examples/before.out) one but after running the tests.
+5. The junit output [XML file](examples/junit.xml) is converted to [html](examples/junit.html) to be easily consumable.
+6. A diff is executed to [extract the modifications that happened to the cluster by running the tests](examples/diff.out).
+
+### Diff explanation
+
+The diff will show the resources in a git diff format:
+
+* Added. Prepended by "{+"
+
+```bash
+grep "^{+" diff.out
+{+/apis/events.k8s.io/v1beta1/namespaces/openshift-kube-scheduler/events/openshift-kube-scheduler-kni1-vmaster-2.1619ebb09ab0ea2e:1468963+}
+...
+```
+
+* Deleted. Prepended by "[-"
+
+```bash
+grep "^\[-" diff.out
+[-/api/v1/namespaces/whatever/pods/my-awesomepod:14627-]
+...
+```
+
+* Modified. It will show the resource version that changed:
+
+```bash
+grep -v -E "^\[-|^{+" diff.out
+/apis/operators.coreos.com/v1alpha1/namespaces/openshift-operator-lifecycle-manager/clusterserviceversions/packageserver:[-1492385-]{+1505051+}
+...
+```
+
+NOTE: Due to the nature of OpenShift, some objects are constantly changing, such as configmaps used by the internal components, events, etc.
