@@ -141,3 +141,42 @@ grep -v -E "^\[-|^{+" diff.out
 ```
 
 NOTE: Due to the nature of OpenShift, some objects are constantly changing, such as configmaps used by the internal components, events, etc.
+
+## Appendix - Compile your own openshift-tests binary in RHEL8
+
+Instead using the provisioned `openshift-tests` binary, this is the procedure to create a custom one in RHEL8
+
+### Install golang 1.13
+
+```bash
+sudo yum install -y golang git
+mkdir $HOME/go
+```
+
+### Get the source
+
+```bash
+go get -u -v github.com/openshift/origin
+go get -u -v github.com/tools/godep
+```
+
+### (Optional) Remove the requisite for the tests to be cluster-admin
+
+Basically comment out (or just remove) the line `TestContext.CreateTestingNS = createTestingNS` from the `test/extended/util/test.go` file ([line 93](https://github.com/openshift/origin/blob/master/test/extended/util/test.go#L93) at the moment of writting this file). See [here](https://github.com/openshift/origin/issues/25084) for more information.
+
+### Compile the openshift-tests binary
+
+```bash
+cd ~/go/src/github.com/openshift/origin/
+make WHAT=cmd/openshift-tests
+```
+
+### Make the `openshift-tests` binary available
+
+```bash
+file _output/local/bin/linux/amd64/openshift-tests
+_output/local/bin/linux/amd64/openshift-tests: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=028ab749f31719c9ccf9446f16de84264f186361, stripped
+
+chmod a+x _output/local/bin/linux/amd64/openshift-tests
+sudo cp _output/local/bin/linux/amd64/openshift-tests /usr/local/bin/
+```
