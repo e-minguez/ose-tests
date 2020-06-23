@@ -28,22 +28,66 @@ export KUBECONFIG=/path/to/my/cluster-admin.kubeconfig
 
 ### A non cluster-admin user
 
-Add a user to the cluster (this requires cluster-admin permissions). This example uses an htpasswd auth backend already created. Your mileage may vary.
+Add a user to the cluster (this requires cluster-admin permissions). This example uses an htpasswd auth backend. Your mileage may vary.
+
+To setup a htpasswd auth backend:
 
 ```bash
+cat << EOF | oc apply -f -
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+  - name: htpassidp
+    challenge: true
+    login: true
+    mappingMethod: claim
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpass-secret
+EOF
+```
+
+Let's create an 'admin/admin' user with cluster-admin permissions:
+
+```bash
+# Using htpasswd provided by the httpd-tools package
+ADMINPASS=$(htpasswd -b -n admin admin | base64)
+cat << EOF | oc apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: htpass-secret
+  namespace: openshift-config
+data:
+  htpasswd: ${ADMINPASS}
+EOF
+# It can take a few moments for the user to be created...
+oc adm policy add-cluster-role-to-user cluster-admin admin
+```
+
+Then create a 'nonadmin/nonadmin' user:
+
+```bash
+# Extract the already created secret from the cluster
 oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
 
+# Append the nonadmin user
 htpasswd -bB "${OUTPUTDIR}"/users.htpasswd nonadmin nonadmin
 Adding password for user nonadmin
 
 # Verify the file "${OUTPUTDIR}"/users.htpasswd contains at least the admin and nonadmin lines
 
+# Instead creating the secret with the here-doc syntax, you can use create secret instead
 oc create secret generic htpass-secret --from-file=htpasswd="${OUTPUTDIR}"/users.htpasswd --dry-run -o yaml -n openshift-config | oc replace -f -
 secret/htpass-secret replaced
 
 # This will generate a "${OUTPUTDIR}"/kubeconfig file
 export KUBECONFIG="${OUTPUTDIR}"/kubeconfig
-# Maybe you need to wait a while for the user to be created...
+# It can take a few moments for the user to be created...
 oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.example.com:6443
 ```
 
