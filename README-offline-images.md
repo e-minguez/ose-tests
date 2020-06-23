@@ -62,8 +62,8 @@ for node in $(oc get nodes -o name); do
   # Extract the tar.gz
   oc debug ${node} -- chroot /host bash -c 'tar -C /tmp -xzf /tmp/image-files.tar.gz && rm -f /tmp/image-files.tar.gz'
   for image in "${IMAGES[@]}"; do
-    # Import every image locally using podman import
-    oc debug ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman import - ${image} && rm -f /tmp/${image##*/}.tar"
+    # Import every image locally using podman load
+    oc debug ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman load && rm -f /tmp/${image##*/}.tar"
   done
 done
 ```
