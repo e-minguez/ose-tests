@@ -27,7 +27,8 @@ oc debug --image="${TOOLSIMAGE}"
 The following snippet will output the list of images already pulled in the cluster. In this case, it was executed after running the tests in a connected environment:
 
 ```bash
-for node in $(oc get nodes -o name);do oc debug ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
+export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
+for node in $(oc get nodes -o name);do oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
 
 docker.io/library/nginx:1.14-alpine
 kni1-bootstrap.example.com:<none>
