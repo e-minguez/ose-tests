@@ -52,9 +52,20 @@ NOTE: In order to copy a file to a node, `oc debug node/<node> -- bash -c 'cat >
 ### Download the images in a linux host with internet connectivity
 
 ```bash
-export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
+export IMAGES=(
+      "docker.io/library/nginx:1.14-alpine"
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "registry.redhat.io/rhel7/support-tools"
+      )
+
 # Create an empty tar file to store all the images
 tar cvf image-files.tar --files-from /dev/null
+
 for image in "${IMAGES[@]}"; do
   # Pull the image locally
   podman pull ${image}
@@ -65,6 +76,7 @@ for image in "${IMAGES[@]}"; do
   # Remove the temporary tar file
   rm -f ${image##*/}.tar
 done
+
 # GZ the tar file with all the images
 gzip image-files.tar
 ```
@@ -74,20 +86,37 @@ gzip image-files.tar
 From a host with access to the nodes, the `image-files.tar.gz` file and as a cluster-admin user:
 
 ```bash
-export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
+
+export IMAGES=(
+      "docker.io/library/nginx:1.14-alpine"
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "registry.redhat.io/rhel7/support-tools"
+      )
+
 for node in $(oc get nodes -o name); do
+
   # Copy the tar.gz file to every host
   # This used to work back in the day but now it doesn't until https://github.com/openshift/oc/pull/470 is merged
   # oc debug ${node} -- chroot /host bash -c 'cat > /tmp/image-files.tar.gz' <(cat image-files.tar.gz)
   scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./image-files.tar.gz \
     core@$(oc get ${node} -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}'):/tmp/
+
   # Extract the tar.gz
   oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c 'tar -C /tmp -xzf /tmp/image-files.tar.gz && rm -f /tmp/image-files.tar.gz'
+
   for image in "${IMAGES[@]}"; do
+
     # Import every image locally using podman load
     oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman load && rm -f /tmp/${image##*/}.tar"
+
   done
+
 done
 ```
 
@@ -96,11 +125,24 @@ done
 Optionally, after the tests have been executed, the images can be removed from the local cache as:
 
 ```bash
-export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
+
+export IMAGES=(
+      "docker.io/library/nginx:1.14-alpine"
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "registry.redhat.io/rhel7/support-tools"
+      )
+
 for node in $(oc get nodes -o name); do
+
   for image in "${IMAGES[@]}"; do
     oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c "podman rmi ${image}"
   done
+
 done
 ```
