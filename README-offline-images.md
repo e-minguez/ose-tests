@@ -60,7 +60,6 @@ export IMAGES=(
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
-      "registry.redhat.io/rhel7/support-tools"
       )
 
 # Create an empty tar file to store all the images
@@ -96,7 +95,6 @@ export IMAGES=(
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
-      "registry.redhat.io/rhel7/support-tools"
       )
 
 for node in $(oc get nodes -o name); do
@@ -135,7 +133,6 @@ export IMAGES=(
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
-      "registry.redhat.io/rhel7/support-tools"
       )
 
 for node in $(oc get nodes -o name); do
