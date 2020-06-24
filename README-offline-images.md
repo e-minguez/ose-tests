@@ -1,5 +1,27 @@
 # How to make the images available offline
 
+## oc debug in disconnected environments
+
+Currently, [there is an issue](https://bugzilla.redhat.com/show_bug.cgi?id=1728135) when using `oc debug node` in disconnected environments as it uses the `registry.redhat.io/rhel7/support-tools:latest` image by default (Which requires internet connectivity). The image is pulled using image:tag, so an `ImageContentSourcePolicy` won't work.
+
+However, `oc debug` has a `--image` parameter where a different image can be specified.
+
+To leverage that functionality, the `registry.redhat.io/rhel7/support-tools:latest` can be mirrored into the registry used to deploy OCP as:
+
+```bash
+export MYREGISTRY='registry.example.com'
+IMAGEID=$(podman pull registry.redhat.io/rhel7/support-tools:latest 2>/dev/null)
+podman login ${MYREGISTRY}
+podman push ${IMAGEID} ${MYREGISTRY}/rhel7/support-tools:latest
+```
+
+Then, every `oc debug` invocation should contain the `--image=${MYREGISTRY}/rhel7/support-tools:latest` parameter, like:
+
+```bash
+export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
+oc debug --image="${TOOLSIMAGE}"
+```
+
 ## List of images used by the tests
 
 The following snippet will output the list of images already pulled in the cluster. In this case, it was executed after running the tests in a connected environment:
@@ -8,9 +30,8 @@ The following snippet will output the list of images already pulled in the clust
 for node in $(oc get nodes -o name);do oc debug ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
 
 docker.io/library/nginx:1.14-alpine
-kni1-bootstrap.cloud.lab.eng.bos.redhat.com:<none>
+kni1-bootstrap.example.com:<none>
 quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:<none>
-registry.redhat.io/rhel7/support-tools:latest
 us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
 ```
 
@@ -53,6 +74,7 @@ From a host with access to the nodes, the `image-files.tar.gz` file and as a clu
 
 ```bash
 export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
+export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name); do
   # Copy the tar.gz file to every host
   # This used to work back in the day but now it doesn't until https://github.com/openshift/oc/pull/470 is merged
@@ -60,10 +82,10 @@ for node in $(oc get nodes -o name); do
   scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./image-files.tar.gz \
     core@$(oc get ${node} -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}'):/tmp/
   # Extract the tar.gz
-  oc debug ${node} -- chroot /host bash -c 'tar -C /tmp -xzf /tmp/image-files.tar.gz && rm -f /tmp/image-files.tar.gz'
+  oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c 'tar -C /tmp -xzf /tmp/image-files.tar.gz && rm -f /tmp/image-files.tar.gz'
   for image in "${IMAGES[@]}"; do
     # Import every image locally using podman load
-    oc debug ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman load && rm -f /tmp/${image##*/}.tar"
+    oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c "cat /tmp/${image##*/}.tar | podman load && rm -f /tmp/${image##*/}.tar"
   done
 done
 ```
@@ -74,9 +96,10 @@ Optionally, after the tests have been executed, the images can be removed from t
 
 ```bash
 export IMAGES=("docker.io/library/nginx:1.14-alpine" "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12")
+export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name); do
   for image in "${IMAGES[@]}"; do
-    oc debug ${node} -- chroot /host bash -c "podman rmi ${image}"
+    oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host bash -c "podman rmi ${image}"
   done
 done
 ```
