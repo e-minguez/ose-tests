@@ -169,9 +169,13 @@ for node in $(oc get nodes -o name); do
 done
 ```
 
+## Run the tests
+
+Now you can go back and [run the tests](README.md#run-the-tests)
+
 ## Clean up the images
 
-Optionally, after the tests have been executed, the images can be removed from the local cache as:
+As a good practice, after the tests have been executed, the images can be removed from the local cache, otherwise, someone can use the images already available to run a pod.
 
 ```bash
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
