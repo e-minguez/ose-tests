@@ -30,16 +30,31 @@ The following snippet will output the list of images already pulled in the clust
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name);do oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
 
+docker.io/library/busybox:1.29
+docker.io/library/httpd:2.4.38-alpine
 docker.io/library/nginx:1.14-alpine
+gcr.io/kubernetes-e2e-test-images/mounttest:1.0
+k8s.gcr.io/pause:3.2
 kni1-bootstrap.example.com:<none>
+quay.io/openshift-release-dev/ocp-release@sha256:<none>
 quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:<none>
+registry.redhat.io/rhel7/support-tools:latest
 us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
 ```
 
-The only ones required are:
+### openshift-conformance-minimal images
 
-* `us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12`
-* `docker.io/library/nginx:1.14-alpine`
+```bash
+export IMAGES=(
+      "docker.io/library/nginx:1.14-alpine"
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
 
 ## Make the images offline
 
@@ -50,6 +65,8 @@ This requires cluster-admin permissions.
 NOTE: In order to copy a file to a node, `oc debug node/<node> -- bash -c 'cat > host/tmp/myfile-remote' <(cat myfile)` worked in previous oc versions. Now it doesn't until [this PR](https://github.com/openshift/oc/pull/470) is merged, so as a temporary workaround in order to copy the required files to the nodes, scp as core user to the nodes is required.
 
 ### Download the images in a linux host with internet connectivity
+
+Depending on the tests you are about to execute, the `export IMAGES` command can be different (see [the list of images used by the tests](#List-of-images-used-by-the-tests)):
 
 ```bash
 export IMAGES=(
