@@ -123,8 +123,9 @@ oc adm policy add-cluster-role-to-user self-provisioner-namespaces nonadmin
 The container image includes a few lists proven to be successfully executed with non cluster-admin permissions. In order to specify the tests list that the execution will run, the `TESTS` environmental variable is used as `-e TESTS=<filename>`, where filename is:
 
 * [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt). Based on the openshift/conformance/parallel/minimal tests suite (`openshift-tests run all --dry-run 2>/dev/null| grep "openshift/conformance/parallel/minimal" | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
-* [openshift-conformance](tests-lists/openshift-conformance.txt). Based on the openshift/conformance tests suite (`openshift-tests run all --dry-run 2>/dev/null| grep "openshift/conformance | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
-* [kubernetes-conformance](tests-lists/kubernetes-conformance.txt).  Based on the kubernetes/conformance tests suite (`openshift-tests run all --dry-run 2>/dev/null| grep "kubernetes/conformance | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
+* [openshift-conformance](tests-lists/openshift-conformance.txt). Based on the openshift/conformance tests suite (`openshift-tests run openshift/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
+* [kubernetes-conformance](tests-lists/kubernetes-conformance.txt).  Based on the kubernetes/conformance tests suite (`openshift-tests run kubernetes/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
+* [openshift-network-stress](tests-lists/openshift-network-stress.txt).  Based on the openshift/network/stress tests suite (`openshift-tests run  openshift/network/stress --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [all](tests-lists/all.txt). All the tests previously mentioned.
 
 If no `TESTS` environmental variable is used (or it is set to an incorrect value), the `all` suite is used.
@@ -153,6 +154,12 @@ podman run --rm -e TESTS="openshift-conformance" -v ${OUTPUTDIR}:/tests:Z quay.i
 
 ```bash
 podman run --rm -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+* [openshift-network-stress](tests-lists/openshift-network-stress.txt)
+
+```bash
+podman run --rm -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all](tests-lists/all.txt)
