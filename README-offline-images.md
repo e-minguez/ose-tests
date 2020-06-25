@@ -26,6 +26,8 @@ oc debug --image="${TOOLSIMAGE}"
 
 The following sections shows the images used by the tests so there is no need to perform these steps, it is just a reference.
 
+The list of registries and images that the tests use can be observed in the [test/utils/image/manifest.go](https://github.com/kubernetes/kubernetes/blob/master/test/utils/image/manifest.go).
+
 The following snippet will output the list of images already pulled in the cluster:
 
 ```bash
@@ -33,20 +35,7 @@ export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name);do oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
 ```
 
-To get the list of images used by the tests, in a connected environment run the previous command before and after running the tests, so you can see which images where pulled by the tests execution, like:
-
-```bash
-docker.io/library/busybox:1.29
-docker.io/library/httpd:2.4.38-alpine
-docker.io/library/nginx:1.14-alpine
-gcr.io/kubernetes-e2e-test-images/mounttest:1.0
-k8s.gcr.io/pause:3.2
-kni1-bootstrap.example.com:<none>
-quay.io/openshift-release-dev/ocp-release@sha256:<none>
-quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:<none>
-registry.redhat.io/rhel7/support-tools:latest
-us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
-```
+To get the list of images used by the tests, in a connected environment run the previous command before and after running the tests, so you can see which images where pulled by the tests execution.
 
 ### [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt) images
 
@@ -91,6 +80,8 @@ export IMAGES=(
 
 ```bash
 export IMAGES=(
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
 ```
 
@@ -98,6 +89,12 @@ export IMAGES=(
 
 ```bash
 export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
 ```
 
