@@ -24,12 +24,18 @@ oc debug --image="${TOOLSIMAGE}"
 
 ## List of images used by the tests
 
-The following snippet will output the list of images already pulled in the cluster. In this case, it was executed after running the tests in a connected environment:
+The following sections shows the images used by the tests so there is no need to perform these steps, it is just a reference.
+
+The following snippet will output the list of images already pulled in the cluster:
 
 ```bash
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name);do oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
+```
 
+To get the list of images used by the tests, in a connected environment run the previous command before and after running the tests, so you can see which images where pulled by the tests execution, like:
+
+```bash
 docker.io/library/busybox:1.29
 docker.io/library/httpd:2.4.38-alpine
 docker.io/library/nginx:1.14-alpine
@@ -42,7 +48,7 @@ registry.redhat.io/rhel7/support-tools:latest
 us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
 ```
 
-### openshift-conformance-minimal images
+### [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt) images
 
 ```bash
 export IMAGES=(
@@ -53,6 +59,34 @@ export IMAGES=(
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [openshift-conformance](tests-lists/openshift-conformance.txt) images
+
+```bash
+export IMAGES=(
+      )
+```
+
+### [kubernetes-conformance](tests-lists/kubernetes-conformance.txt) images
+
+```bash
+export IMAGES=(
+      )
+```
+
+### [openshift-network-stress](tests-lists/openshift-network-stress.txt) images
+
+```bash
+export IMAGES=(
+      )
+```
+
+### [all](tests-lists/all.txt) images
+
+```bash
+export IMAGES=(
       )
 ```
 
