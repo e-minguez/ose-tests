@@ -174,6 +174,8 @@ or
 podman run --rm -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
+NOTE: When running rootless podman in RHEL8, an error similar to `ERRO[0546] unable to close namespace: "close /proc/33435/ns/user: bad file descriptor"` can happen. You can safely ignore the error message. What happens is that Podman closes all the files once it re-execs itself in the child user namespace, and the userns/mountns file descriptors were mistakenly closed twice. See [this issue](https://github.com/containers/libpod/issues/5626) for more information.
+
 ## Explanations and files
 
 In order to run the tests as non cluster-admin, a modification in the code is needed (see [here](https://github.com/openshift/origin/issues/25084) for more information).
