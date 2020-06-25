@@ -183,7 +183,7 @@ In order to run the tests as non cluster-admin, a modification in the code is ne
 Instead compiling your own openshift-tests binary and provide an easier method, a couple of container images have been created:
 
 * [https://quay.io/repository/eminguez/ose-tests](https://github.com/e-minguez/origin/blob/cluster-admin-not-needed/images/tests/Dockerfile.rhel). This is the same image used by the openshift-tests but using public images, `registry.redhat.io/rhel8/go-toolset:1.13` (vs `registry.svc.ci.openshift.org/ocp/builder:golang-1.13`) & `registry.redhat.io/openshift4/ose-cli:v4.4` (vs `registry.svc.ci.openshift.org/ocp/4.2:cli`) and the custom `openshift-tests` binary with the cluster-admin requisite removed.
-* [https://quay.io/repository/eminguez/ose-tests-full](Dockerfile). This image contains some scripts to make it easy the execution of the ose-tests, as well as [the lists of tests](tests-lists/) that would be executed proved to be successfully executed as non cluster-admin.
+* [https://quay.io/repository/eminguez/ose-tests-full](Dockerfile). This image extends the previous one and contains some [scripts](scripts/) to make it easy the execution of the ose-tests, as well as [the lists of tests](tests-lists/) that would be executed proved to be successfully executed as non cluster-admin.
 
 ### Files
 
