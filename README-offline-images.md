@@ -52,7 +52,6 @@ us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
 
 ```bash
 export IMAGES=(
-      "docker.io/library/nginx:1.14-alpine"
       "docker.io/library/busybox:1.29"
       "docker.io/library/httpd:2.4.38-alpine"
       "docker.io/library/nginx:1.14-alpine"
