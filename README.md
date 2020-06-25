@@ -131,6 +131,10 @@ If no `TESTS` environmental variable is used (or it is set to an incorrect value
 
 For more information about the tests and the tests suite, see [https://github.com/openshift/origin/tree/master/test/extended](https://github.com/openshift/origin/tree/master/test/extended)
 
+## Run the tests in disconnected environments
+
+If the OCP environment doesn't have internet connectivity, it is required to 'preload' the images in the hosts container images cache. See [README-offline-images.md](README-offline-images.md) document before continuing.
+
 ## Run the tests
 
 * [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt)
