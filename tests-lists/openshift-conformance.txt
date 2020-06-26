@@ -169,7 +169,6 @@
 "[k8s.io] InitContainer [NodeConformance] should not start app containers if init containers fail on a RestartAlways pod [Conformance] [sig-node] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
 "[sig-auth] [Feature:NodeAuthenticator] The kubelet's main port 10250 should reject requests with no credentials [Skipped:ibmcloud] [Suite:openshift/conformance/parallel] [Suite:k8s]"
 "[k8s.io] Kubelet when scheduling a busybox command in a pod should print the output to logs [NodeConformance] [Conformance] [sig-node] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
-"[k8s.io] Container Runtime blackbox test when running a container with a new image should be able to pull image [NodeConformance] [sig-node] [Suite:openshift/conformance/parallel] [Suite:k8s]"
 "[sig-node] ConfigMap should be consumable via environment variable [NodeConformance] [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
 "[k8s.io] [Feature:Example] [k8s.io] Downward API should create a pod that prints his name and namespace [sig-node] [Suite:openshift/conformance/parallel] [Suite:k8s]"
 "[sig-storage] Projected secret should be able to mount in a volume regardless of a different secret existing with same name in different namespace [NodeConformance] [Suite:openshift/conformance/parallel] [Suite:k8s]"
