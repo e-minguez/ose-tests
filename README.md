@@ -132,6 +132,10 @@ If no `TESTS` environmental variable is used (or it is set to an incorrect value
 
 For more information about the tests and the tests suite, see [https://github.com/openshift/origin/tree/master/test/extended](https://github.com/openshift/origin/tree/master/test/extended)
 
+## Run the tests in disconnected environments
+
+If the OCP environment doesn't have internet connectivity, it is required to 'preload' the images in the hosts container images cache. See [README-offline-images.md](README-offline-images.md) document before continuing.
+
 ## Run the tests
 
 * [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt)
@@ -170,14 +174,16 @@ or
 podman run --rm -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
+NOTE: When running rootless podman in RHEL8, an error similar to `ERRO[0546] unable to close namespace: "close /proc/33435/ns/user: bad file descriptor"` can happen. You can safely ignore the error message. What happens is that Podman closes all the files once it re-execs itself in the child user namespace, and the userns/mountns file descriptors were mistakenly closed twice. See [this issue](https://github.com/containers/libpod/issues/5626) for more information.
+
 ## Explanations and files
 
 In order to run the tests as non cluster-admin, a modification in the code is needed (see [here](https://github.com/openshift/origin/issues/25084) for more information).
 
 Instead compiling your own openshift-tests binary and provide an easier method, a couple of container images have been created:
 
-* [https://quay.io/repository/eminguez/ose-tests](https://github.com/e-minguez/origin/blob/cluster-admin-not-needed/images/tests/Dockerfile.rhel). This is the same image used by the openshift-tests but using public images, `registry.redhat.io/rhel8/go-toolset:1.13` (vs `registry.svc.ci.openshift.org/ocp/builder:golang-1.13`) & `registry.redhat.io/openshift4/ose-cli:v4.4` (vs `registry.svc.ci.openshift.org/ocp/4.2:cli`)
-* [https://quay.io/repository/eminguez/ose-tests-full](Dockerfile). This image contains some scripts to make it easy the execution of the ose-tests, as well as [the lists of tests](tests-lists/) that would be executed proved to be successfully executed as non cluster-admin.
+* [https://quay.io/repository/eminguez/ose-tests](https://github.com/e-minguez/origin/blob/cluster-admin-not-needed/images/tests/Dockerfile.rhel). This is the same image used by the openshift-tests but using public images, `registry.redhat.io/rhel8/go-toolset:1.13` (vs `registry.svc.ci.openshift.org/ocp/builder:golang-1.13`) & `registry.redhat.io/openshift4/ose-cli:v4.4` (vs `registry.svc.ci.openshift.org/ocp/4.2:cli`) and the custom `openshift-tests` binary with the cluster-admin requisite removed.
+* [https://quay.io/repository/eminguez/ose-tests-full](Dockerfile). This image extends the previous one and contains some [scripts](scripts/) to make it easy the execution of the ose-tests, as well as [the lists of tests](tests-lists/) that would be executed proved to be successfully executed as non cluster-admin.
 
 ### Files
 

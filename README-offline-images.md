@@ -24,22 +24,79 @@ oc debug --image="${TOOLSIMAGE}"
 
 ## List of images used by the tests
 
-The following snippet will output the list of images already pulled in the cluster. In this case, it was executed after running the tests in a connected environment:
+The following sections shows the images used by the tests so there is no need to perform these steps, it is just a reference.
+
+The list of registries and images that the tests use can be observed in the [test/utils/image/manifest.go](https://github.com/kubernetes/kubernetes/blob/master/test/utils/image/manifest.go).
+
+The following snippet will output the list of images already pulled in the cluster:
 
 ```bash
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 for node in $(oc get nodes -o name);do oc debug --image="${TOOLSIMAGE}" ${node} -- chroot /host sh -c 'crictl images -o json' 2>/dev/null | jq -r .images[].repoTags[]; done | sort -u
-
-docker.io/library/nginx:1.14-alpine
-kni1-bootstrap.example.com:<none>
-quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:<none>
-us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12
 ```
 
-The only ones required are:
+To get the list of images used by the tests, in a connected environment run the previous command before and after running the tests, so you can see which images where pulled by the tests execution.
 
-* `us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12`
-* `docker.io/library/nginx:1.14-alpine`
+### [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [openshift-conformance](tests-lists/openshift-conformance.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [kubernetes-conformance](tests-lists/kubernetes-conformance.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [openshift-network-stress](tests-lists/openshift-network-stress.txt) images
+
+```bash
+export IMAGES=(
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [all](tests-lists/all.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/httpd:2.4.38-alpine"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
 
 ## Make the images offline
 
@@ -50,6 +107,8 @@ This requires cluster-admin permissions.
 NOTE: In order to copy a file to a node, `oc debug node/<node> -- bash -c 'cat > host/tmp/myfile-remote' <(cat myfile)` worked in previous oc versions. Now it doesn't until [this PR](https://github.com/openshift/oc/pull/470) is merged, so as a temporary workaround in order to copy the required files to the nodes, scp as core user to the nodes is required.
 
 ### Download the images in a linux host with internet connectivity
+
+Depending on the tests you are about to execute, the `export IMAGES` command can be different (see [the list of images used by the tests](#List-of-images-used-by-the-tests)):
 
 ```bash
 export IMAGES=(
@@ -118,9 +177,13 @@ for node in $(oc get nodes -o name); do
 done
 ```
 
+## Run the tests
+
+Now you can go back and [run the tests](README.md#run-the-tests)
+
 ## Clean up the images
 
-Optionally, after the tests have been executed, the images can be removed from the local cache as:
+As a good practice, after the tests have been executed, the images can be removed from the local cache, otherwise, someone can use the images already available to run a pod.
 
 ```bash
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
