@@ -91,6 +91,29 @@ export KUBECONFIG="${OUTPUTDIR}"/kubeconfig
 oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.example.com:6443
 ```
 
+### Privileging The Non-Admin User
+
+Each test suite will eventually have its own role that empower the user account running the test to perform the actions required by the given tests suite. Presently this involves specific instructions for the openshift-conformance-minimal suite of tests and generic temporary instructions for the other test suites.
+
+#### For openshift-conformance-minimal Suite Tests
+
+Create a custom cluster role that contains all the user rights required to run this suite by performing an oc create on [the file located in the rbac directory of this repository](rbac/osetests-ocp-minimal.yml).
+
+Example:
+
+```bash
+$ oc create -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yml
+```
+
+It's advisable to wait 5-10 minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user:
+
+```bash
+$ oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
+```
+
+and then wait another 5 minutes or so.
+
+#### For All Other Test Suites
 Create a self-provisioner-namespace cluster role that allows namespace creation/deletion and assign that cluster role to the user as well as the 'admin' role (no cluster-admin, just admin):
 
 ```bash
