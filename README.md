@@ -126,7 +126,7 @@ The container image includes a few lists proven to be successfully executed with
 * [openshift-conformance](tests-lists/openshift-conformance.txt). Based on the openshift/conformance tests suite (`openshift-tests run openshift/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [kubernetes-conformance](tests-lists/kubernetes-conformance.txt).  Based on the kubernetes/conformance tests suite (`openshift-tests run kubernetes/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [openshift-network-stress](tests-lists/openshift-network-stress.txt).  Based on the openshift/network/stress tests suite (`openshift-tests run  openshift/network/stress --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
-* [openshift-conformance-excluded](tests-lists/openshift-conformance-excluded.txt).  Based on the openshift/conformance-excluded tests suite (`openshift-tests run  openshift/conformance-excluded --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
+* [openshift-conformance-excluded](tests-lists/openshift-conformance-excluded.txt).  Based on the openshift/conformance-excluded tests suite (`openshift-tests run openshift/conformance-excluded --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [all](tests-lists/all.txt). All the tests previously mentioned.
 
 If no `TESTS` environmental variable is used (or it is set to an incorrect value), the `all` suite is used.
