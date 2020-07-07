@@ -10,8 +10,8 @@ if [ ! -f /tests/kubeconfig ]; then
 fi
 
 if [ ! -f /usr/local/share/ose-tests/"${TESTS}".txt ]; then
-  echo "${TESTS} file not found!, using all.txt instead"
-  FILE="/usr/local/share/ose-tests/all.txt"
+  echo "${TESTS} file not found!, using all-non-disruptive.txt instead"
+  FILE="/usr/local/share/ose-tests/all-non-disruptive.txt"
 else
   FILE="/usr/local/share/ose-tests/${TESTS}.txt"
 fi

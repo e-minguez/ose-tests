@@ -126,11 +126,25 @@ The container image includes a few lists proven to be successfully executed with
 * [openshift-conformance](tests-lists/openshift-conformance.txt). Based on the openshift/conformance tests suite (`openshift-tests run openshift/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [kubernetes-conformance](tests-lists/kubernetes-conformance.txt).  Based on the kubernetes/conformance tests suite (`openshift-tests run kubernetes/conformance --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
 * [openshift-network-stress](tests-lists/openshift-network-stress.txt).  Based on the openshift/network/stress tests suite (`openshift-tests run  openshift/network/stress --dry-run | grep -v -i "clusteradmin"` and extracted the ones that passed with non cluster-admin permissions)
-* [all](tests-lists/all.txt). All the tests previously mentioned.
+* [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt).  Based on the openshift/conformance-excluded tests suite (`openshift-tests run openshift/conformance-excluded --dry-run | grep -v -i "clusteradmin" | grep -v -i "disruptive"` and extracted the ones that passed with non cluster-admin permissions)
+* [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt).  Based on the openshift/conformance-excluded tests suite (`openshift-tests run openshift/conformance-excluded --dry-run | grep -v -i "clusteradmin" | grep -i "disruptive"` and extracted the ones that passed with non cluster-admin permissions. ***Please be aware that running this might affect your cluster in a disruptive way.***)
+* [all-disruptive](tests-lists/all-disruptive.txt). All the tests previously mentioned which are ***disruptive***
+* [all-non-disruptive](tests-lists/all-non-disruptive.txt). All the tests previously mentioned which are not disruptive
 
 If no `TESTS` environmental variable is used (or it is set to an incorrect value), the `all` suite is used.
 
 For more information about the tests and the tests suite, see [https://github.com/openshift/origin/tree/master/test/extended](https://github.com/openshift/origin/tree/master/test/extended)
+
+# Test suites that do not work with non cluster-admin permissions
+
+The below suites fail to run as a non cluster-admin user. The expectation is that all of the tests will fail for this user
+
+* openshift/build 
+* openshift/templates
+* openshift/image-registry
+* openshift/image-ecosystem
+* openshift/jenkins-e2e
+* openshift/test-cmd
 
 ## Run the tests in disconnected environments
 
@@ -162,10 +176,28 @@ podman run --rm -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.
 podman run --rm -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
-* [all](tests-lists/all.txt)
+* [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt)
 
 ```bash
-podman run --rm -e TESTS="all" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+* [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt)
+
+```bash
+podman run --rm -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+* [all-disruptive](tests-lists/all-disruptive.txt)
+
+```bash
+podman run --rm -e TESTS="all-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+* [all-non-disruptive](tests-lists/all-non-disruptive.txt)
+
+```bash
+podman run --rm -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 or
