@@ -179,55 +179,55 @@ If the OCP environment doesn't have internet connectivity, it is required to 'pr
 * [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt)
 
 ```bash
-podman run --rm -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance](tests-lists/openshift-conformance.txt)
 
 ```bash
-podman run --rm -e TESTS="openshift-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [kubernetes-conformance](tests-lists/kubernetes-conformance.txt)
 
 ```bash
-podman run --rm -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-network-stress](tests-lists/openshift-network-stress.txt)
 
 ```bash
-podman run --rm -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt)
 
 ```bash
-podman run --rm -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt)
 
 ```bash
-podman run --rm -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all-disruptive](tests-lists/all-disruptive.txt)
 
 ```bash
-podman run --rm -e TESTS="all-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="all-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all-non-disruptive](tests-lists/all-non-disruptive.txt)
 
 ```bash
-podman run --rm -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 or
 
 ```bash
-podman run --rm -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 NOTE: When running rootless podman in RHEL8, an error similar to `ERRO[0546] unable to close namespace: "close /proc/33435/ns/user: bad file descriptor"` can happen. You can safely ignore the error message. What happens is that Podman closes all the files once it re-execs itself in the child user namespace, and the userns/mountns file descriptors were mistakenly closed twice. See [this issue](https://github.com/containers/libpod/issues/5626) for more information.
@@ -239,7 +239,7 @@ The `openshift-tests` binary accepts some parameters that are wrapped into a scr
 However, for compatibility, there is a `TIMES` environment variable that can be used when running the `podman run` command to run each test a specified number of times (1 by default or the test suite's preferred value) as:
 
 ```bash
-podman run --rm -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 ## Explanations and files
@@ -309,7 +309,7 @@ NOTE: Due to the nature of OpenShift, some objects are constantly changing, such
 The tests can be executed in a for loop like:
 
 ```bash
-for i in {0..10}; do echo "Run $i"; podman run --rm -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest; done
+for i in {0..10}; do echo "Run $i"; podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest; done
 ```
 
 * Get tests passed/failed/skipped
