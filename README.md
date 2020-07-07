@@ -114,6 +114,7 @@ oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
 and then wait another few minutes or so.
 
 #### For All Other Test Suites
+
 Create a self-provisioner-namespace cluster role that allows namespace creation/deletion and assign that cluster role to the user as well as the 'admin' role (no cluster-admin, just admin):
 
 ```bash
@@ -158,7 +159,7 @@ If no `TESTS` environmental variable is used (or it is set to an incorrect value
 
 For more information about the tests and the tests suite, see [https://github.com/openshift/origin/tree/master/test/extended](https://github.com/openshift/origin/tree/master/test/extended)
 
-# Test suites that do not work with non cluster-admin permissions
+## Test suites that do not work with non cluster-admin permissions
 
 The below suites fail to run as a non cluster-admin user. The expectation is that all of the tests will fail for this user
 
@@ -292,6 +293,48 @@ grep -v -E "^\[-|^{+" diff.out
 ```
 
 NOTE: Due to the nature of OpenShift, some objects are constantly changing, such as configmaps used by the internal components, events, etc.
+
+## Appendix - Run the tests in a loop and extract results
+
+The tests can be executed in a for loop like:
+
+```bash
+for i in {0..10}; do echo "Run $i"; podman run --rm -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest; done
+```
+
+* Get tests passed/failed/skipped
+
+```bash
+find -name openshift-conformance-minimal.txt -print0 | xargs -0 tail -n1
+```
+
+Will output something similar to:
+
+```bash
+==> ./20200707-105323/openshift-conformance-minimal.txt <==
+119 pass, 0 skip (8m2s)
+==> ./20200707-111249/openshift-conformance-minimal.txt <==
+119 pass, 0 skip (6m25s)
+==> ./20200707-114659/openshift-conformance-minimal.txt <==
+119 pass, 0 skip (7m31s)
+==> ./20200707-113853/openshift-conformance-minimal.txt <==
+119 pass, 0 skip (7m3s)
+==> ./20200707-115535/openshift-conformance-minimal.txt <==
+error: 1 fail, 118 pass, 0 skip (8m18s)
+...
+```
+
+* Find unique tests that failed
+
+```bash
+find -name openshift-conformance-minimal.txt -print0 | xargs -I {} -0 sh -c "awk '/Failing tests:/,0' {} | grep '^\[.*'" | sort -u
+```
+
+* Find all tests that failed per run
+
+```bash
+find -name openshift-conformance-minimal.txt -print0 | xargs -I {} -0 sh -c "echo {}; awk '/Failing tests:/,0' {} | grep '^\[.*'"
+```
 
 ## Appendix - Compile your own openshift-tests binary in RHEL8
 
