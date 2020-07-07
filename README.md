@@ -102,16 +102,16 @@ Create a custom cluster role that contains all the user rights required to run t
 Example:
 
 ```bash
-$ oc create -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yml
+oc create -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yml
 ```
 
-It's advisable to wait 5-10 minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user:
+It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user:
 
 ```bash
-$ oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
+oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
 ```
 
-and then wait another 5 minutes or so.
+and then wait another few minutes or so.
 
 #### For All Other Test Suites
 Create a self-provisioner-namespace cluster role that allows namespace creation/deletion and assign that cluster role to the user as well as the 'admin' role (no cluster-admin, just admin):
