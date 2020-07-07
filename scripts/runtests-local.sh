@@ -5,7 +5,7 @@ if [ ! -d /tests/ ]; then
 fi
 
 if [ ! -f /tests/kubeconfig ]; then
-  echo "KUBECONFIG file not found!"
+  echo "KUBECONFIG file not found (it must be located in /tests/kubeconfig)"
   exit 1
 fi
 
@@ -16,6 +16,8 @@ else
   FILE="/usr/local/share/ose-tests/${TESTS}.txt"
 fi
 
+TIMES=${TIMES:-1}
+
 DESTDIR=/tests/"$(date +%Y%m%d-%H%M%S)"
 mkdir -p "${DESTDIR}"
 
@@ -23,7 +25,7 @@ export KUBECONFIG=/tests/kubeconfig
 # Get all the objects. Redirect stdout to avoid 'notfound' and 'Forbidden' messages as it is not executed as cluster-admin
 /usr/local/bin/allobjects.sh > "${DESTDIR}"/before.out 2> /dev/null
 # If some tests fail, continue the execution
-/usr/bin/openshift-tests run --junit-dir="${DESTDIR}"/ -f "${FILE}" -o "${DESTDIR}"/"${FILE##*/}" || true
+/usr/bin/openshift-tests run --count "${TIMES}" --junit-dir="${DESTDIR}"/ -f "${FILE}" -o "${DESTDIR}"/"${FILE##*/}" || true
 # Wait some seconds for temporary namespaces to be deleted
 sleep 20
 # Get all the objects. Redirect stdout to avoid 'notfound' and 'Forbidden' messages as it is not executed as cluster-admin
