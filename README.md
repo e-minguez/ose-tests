@@ -97,7 +97,7 @@ Each test suite will eventually have its own role that empower the user account 
 
 #### For openshift-conformance-minimal Suite Tests
 
-Create a custom cluster role that contains all the user rights required to run this suite by performing an oc create on [the file located in the rbac directory of this repository](rbac/osetests-ocp-minimal.yml).
+As a cluster-admin, create a custom cluster role that contains all the user rights required to run this suite by performing an oc create on [the file located in the rbac directory of this repository](rbac/osetests-ocp-minimal.yml).
 
 Example:
 
@@ -105,7 +105,7 @@ Example:
 oc create -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yml
 ```
 
-It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user:
+It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user (again as the cluster-admin user from before):
 
 ```bash
 oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
