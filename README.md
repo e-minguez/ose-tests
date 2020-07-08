@@ -73,17 +73,15 @@ Then create a 'nonadmin/nonadmin' user:
 
 ```bash
 # Extract the already created secret from the cluster
-oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
+oc get secret htpass-secret -ojsonpath="{.data.htpasswd}{'\n'}" -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
 
 # Append the nonadmin user
 htpasswd -bB "${OUTPUTDIR}"/users.htpasswd nonadmin nonadmin
-Adding password for user nonadmin
 
 # Verify the file "${OUTPUTDIR}"/users.htpasswd contains at least the admin and nonadmin lines
 
 # Instead creating the secret with the here-doc syntax, you can use create secret instead
 oc create secret generic htpass-secret --from-file=htpasswd="${OUTPUTDIR}"/users.htpasswd --dry-run -o yaml -n openshift-config | oc replace -f -
-secret/htpass-secret replaced
 
 # This will generate a "${OUTPUTDIR}"/kubeconfig file
 export KUBECONFIG="${OUTPUTDIR}"/kubeconfig
