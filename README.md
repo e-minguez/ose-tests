@@ -73,7 +73,7 @@ Then create a 'nonadmin/nonadmin' user:
 
 ```bash
 # Extract the already created secret from the cluster
-oc get secret htpass-secret -ojsonpath="{.data.htpasswd}{'\n'}" -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
+oc get secret htpass-secret -ojsonpath="{.data.htpasswd}" -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
 
 # Append the nonadmin user
 htpasswd -bB "${OUTPUTDIR}"/users.htpasswd nonadmin nonadmin
