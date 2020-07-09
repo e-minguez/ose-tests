@@ -29,6 +29,8 @@ export KUBECONFIG=/tests/kubeconfig
 echo "Running the tests as $(oc whoami)"
 # Get all the objects. Redirect stdout to avoid 'notfound' and 'Forbidden' messages as it is not executed as cluster-admin
 /usr/local/bin/allobjects.sh > "${DESTDIR}"/before.out 2> /dev/null
+# Wait a few seconds to let the API settle as we stressed it with the allobjects script
+sleep 10
 # If some tests fail, continue the execution
 /usr/bin/openshift-tests run --max-parallel-tests "${PARALLEL}" --count "${TIMES}" --junit-dir="${DESTDIR}"/ -f "${FILE}" -o "${DESTDIR}"/"${FILE##*/}" || true
 # Wait some seconds for temporary namespaces to be deleted
