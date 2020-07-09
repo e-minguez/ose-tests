@@ -25,6 +25,8 @@ DESTDIR=/tests/"$(date +%Y%m%d-%H%M%S)"
 mkdir -p "${DESTDIR}"
 
 export KUBECONFIG=/tests/kubeconfig 
+
+echo "Running the tests as $(oc whoami)"
 # Get all the objects. Redirect stdout to avoid 'notfound' and 'Forbidden' messages as it is not executed as cluster-admin
 /usr/local/bin/allobjects.sh > "${DESTDIR}"/before.out 2> /dev/null
 # If some tests fail, continue the execution
