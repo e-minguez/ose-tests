@@ -234,10 +234,24 @@ NOTE: When running rootless podman in RHEL8, an error similar to `ERRO[0546] una
 
 The `openshift-tests` binary accepts some parameters that are wrapped into a script so there is no need to specify any option.
 
-However, for compatibility, there is a `TIMES` environment variable that can be used when running the `podman run` command to run each test a specified number of times (1 by default or the test suite's preferred value) as:
+However, there are some parameters that can be used:
+
+* `TIMES` to run each test a specified number of times (1 by default or the test suite's preferred value) as:
 
 ```bash
 podman run --rm --name="ose-tests" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+* `PARALLEL` to specify the maximum number of tests running in parallel (0 by default to test suite recommended value, which is different in each suite) as:
+
+```bash
+podman run --rm --name="ose-tests" -e PARALLEL="1" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
+NOTE: The parameters can be used simultaneously like:
+
+```bash
+podman run --rm --name="ose-tests" -e PARALLEL="1" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 ## Explanations and files
