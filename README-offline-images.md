@@ -85,14 +85,44 @@ export IMAGES=(
       )
 ```
 
-### [all](tests-lists/all.txt) images
+### [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
+      "k8s.gcr.io/pause:3.2"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      )
+```
+
+### [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      )
+```
+
+### [all-disruptive](tests-lists/all-disruptive.txt) images
+
+```bash
+export IMAGES=(
+      "docker.io/library/busybox:1.29"
+      )
+```
+
+### [all-non-disruptive](tests-lists/all-non-disruptive.txt) images
 
 ```bash
 export IMAGES=(
       "docker.io/library/busybox:1.29"
       "docker.io/library/httpd:2.4.38-alpine"
       "docker.io/library/nginx:1.14-alpine"
+      "gcr.io/authenticated-image-pulling/alpine:3.7"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
@@ -112,11 +142,12 @@ Depending on the tests you are about to execute, the `export IMAGES` command can
 
 ```bash
 export IMAGES=(
-      "docker.io/library/nginx:1.14-alpine"
       "docker.io/library/busybox:1.29"
       "docker.io/library/httpd:2.4.38-alpine"
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "gcr.io/authenticated-image-pulling/alpine:3.7"
+      "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
@@ -147,11 +178,12 @@ From a host with access to the nodes, the `image-files.tar.gz` file and as a clu
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 
 export IMAGES=(
-      "docker.io/library/nginx:1.14-alpine"
       "docker.io/library/busybox:1.29"
       "docker.io/library/httpd:2.4.38-alpine"
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "gcr.io/authenticated-image-pulling/alpine:3.7"
+      "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
@@ -189,11 +221,12 @@ As a good practice, after the tests have been executed, the images can be remove
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
 
 export IMAGES=(
-      "docker.io/library/nginx:1.14-alpine"
       "docker.io/library/busybox:1.29"
       "docker.io/library/httpd:2.4.38-alpine"
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
+      "gcr.io/authenticated-image-pulling/alpine:3.7"
+      "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
       "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
       )
