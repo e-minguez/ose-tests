@@ -378,7 +378,7 @@ go get -u -v github.com/tools/godep
 
 ### (Optional) Remove the requisite for the tests to be cluster-admin
 
-Basically comment out (or just remove) the line `TestContext.CreateTestingNS = createTestingNS` from the `test/extended/util/test.go` file ([line 93](https://github.com/openshift/origin/blob/master/test/extended/util/test.go#L93) at the moment of writting this file). See [here](https://github.com/openshift/origin/issues/25084) for more information.
+See [here](https://github.com/openshift/origin/issues/25084) for more information.
 
 ### Compile the openshift-tests binary
 
