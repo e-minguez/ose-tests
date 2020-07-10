@@ -140,6 +140,29 @@ oc adm policy add-cluster-role-to-user self-provisioner-namespaces nonadmin
 # It can take a while for the user to be given the permissions
 ```
 
+#### SCC permissions
+
+The 'nonadmin' user is going to use the `restricted` SCC only, so we can give the user permissions upfront in the role as:
+
+```bash
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - restricted
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+```
+
+See [here](https://docs.openshift.com/container-platform/4.4/authentication/managing-security-context-constraints.html#role-based-access-to-ssc_configuring-internal-oauth) for more information.
+
+Also, add the user to the restricted SCC:
+
+```bash
+oc adm policy add-scc-to-user restricted nonadmin
+```
+
 ### Tests
 
 The container image includes a few lists proven to be successfully executed with non cluster-admin permissions. In order to specify the tests list that the execution will run, the `TESTS` environmental variable is used as `-e TESTS=<filename>`, where filename is:
