@@ -201,13 +201,13 @@ podman run --rm --name="ose-tests" -e TESTS="openshift-network-stress" -v ${OUTP
 * [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all-disruptive](tests-lists/all-disruptive.txt)
