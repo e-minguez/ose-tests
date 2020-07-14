@@ -1,0 +1,165 @@
+#!/usr/bin/python3
+
+import getopt, sys, os, shutil, subprocess, json, hashlib
+from random import randint
+
+try:
+  import ruamel.yaml
+
+except ModuleNotFoundError:
+  sys.stderr.write("Error importing ruamel.yaml module please install it with pip.\n")
+  sys.exit(1)
+
+#########################################
+### Globals
+#########################################
+tmpDir="/var/tmp/.audit2role."+ str(randint(1,100000))
+roleName=""
+outputData = {}
+seenRules = []
+testsUser="tests"
+
+def usage():
+  print("""Usage: audit2role [OPTIONS]
+           -h | --help               Produce this help message and quit
+           -l | --long               Do not attempt to condense the rules or group by read/write or read-only needs. More precise but much longer role definitions.
+           -c | --condense           Attempt to condense the rules or group by read/write or read-only needs (default)
+           -name NAME | --name=NAME  Instead of automatically generating a name for the role, use this one.
+           -o FILE | --output=FILE   Instead of writing YAML to standard output, write to given file path""")
+  sys.exit(1)
+
+def find_common_elements(listA,listB): 
+    elements = [value for value in listA if value in listB] 
+    return elements
+
+#########################################
+### CLI Argument Parsing
+#########################################
+
+try:
+
+  opts, args = getopt.getopt(sys.argv[1:], "ho:n:", ["help", "output="])
+
+except getopt.GetoptError as err:
+
+  print(str(err))
+  usage()
+  sys.exit(2)
+
+outputFile = None
+givenName = None
+
+for currentOption, givenValue in opts:
+
+  if currentOption in ("-h", "--help"):
+
+    usage()
+
+  elif currentOption in ("-n", "--name"):
+
+    givenName = givenValue
+
+  elif currentOption in ("-o", "--output"):
+
+    outputFile = givenValue
+
+  else:
+
+    assert False, "unhandled option"
+
+if not givenName:
+
+  roleName = "audit2role-automatic-name-"+ str(randint(1,10000))
+
+else:
+
+  roleName = givenName
+
+#########################################
+###  Begin Main Logic
+#########################################
+
+ocPath = shutil.which("oc")
+jqPath = shutil.which("jq")
+
+if not jqPath:
+  sys.stderr.write("Unable to locate an jq executable when using $PATH\n")
+  sys.exit(1)
+
+if not ocPath:
+  sys.stderr.write("Unable to locate an oc executable when using $PATH\n")
+  sys.exit(1)
+
+try: 
+  os.mkdir(tmpDir)
+except:
+  sys.exit(2)
+
+getNodesCmd = os.popen( ocPath +" get nodes -l node-role.kubernetes.io/master=\"\"  -o name").read()
+
+  ## Retrieve the audit log on each master
+for currentMaster in getNodesCmd.splitlines():
+
+    ## collect the kube-api logs
+  auditFileDownloadProcess=subprocess.Popen( ocPath +" adm node-logs "+ currentMaster +" --path=kube-apiserver/audit.log | jq . > "+ tmpDir +"/kubeapi-"+ currentMaster.split('/')[1], shell=True)
+  auditFileDownloadProcess.communicate()
+
+    ## Collect the openshift-api logs
+  auditFileDownloadProcess=subprocess.Popen( ocPath +" adm node-logs "+ currentMaster +" --path=openshift-apiserver/audit.log | jq . > "+ tmpDir +"/openshiftapi-"+ currentMaster.split('/')[1], shell=True)
+  auditFileDownloadProcess.communicate()
+
+  ## Consolidate the separate audit files into a single one, filtering for the currently targetted testsUser
+auditFileMergeProcess=subprocess.Popen( jqPath +" '. | select(.user.username==\""+ testsUser +"\")' "+ tmpDir +"/* | jq -s . > "+ tmpDir +"/merged.log", shell=True)
+auditFileMergeProcess.communicate()
+
+  ## Get the final data structure started with the more-or-less static values
+outputData['apiVersion'] = "rbac.authorization.k8s.io/v1"
+outputData['kind'] = "ClusterRole"
+outputData['metadata'] = { 'name': roleName }
+outputData['rules'] = []
+
+  ## Begin Rule Generation
+with open(tmpDir +"/merged.log") as fh:
+
+  jsonDocument = json.load(fh)
+
+  for eventDocument in jsonDocument:
+
+      ## If a subresource is being access, build the reference to that, otherwise just main resource being requested
+    if "objectRef" in eventDocument.keys():
+      if "subresource" in eventDocument['objectRef'].keys():
+        resourceName = eventDocument['objectRef']['resource'] +"/"+ eventDocument['objectRef']['subresource']
+      else:
+        resourceName = eventDocument['objectRef']['resource']
+
+      if "apiGroup" in eventDocument['objectRef'].keys():
+        apiGroup = eventDocument['objectRef']['apiGroup']
+      else:
+        apiGroup = ""
+
+      newRule = { 'apiGroups': [apiGroup], 'resources': [resourceName], 'verbs': [eventDocument['verb']] }
+
+        ## Take a SHA256 of the new rule and only append if we've never seen it before
+      newRuleYAML = ruamel.yaml.dump(newRule, Dumper=ruamel.yaml.RoundTripDumper).encode('utf-8')
+      newRuleHash = hashlib.sha256( newRuleYAML )
+
+      if not newRuleHash.hexdigest() in seenRules:
+        seenRules.append( newRuleHash.hexdigest() )
+        outputData['rules'].append(newRule)
+
+if not len(outputData['rules']):
+  sys.stderr.write("No actions found in the audit log for the given user: "+ testsUser +"\n")
+  sys.exit(3)
+
+outputYAML=ruamel.yaml.dump(outputData, Dumper=ruamel.yaml.RoundTripDumper)
+
+if not outputFile:
+
+  sys.stdout.write(outputYAML)
+
+else:
+
+  with open(outputFile, "w") as fh:
+
+    print("Outputting YAML to: "+ outputFile)
+    fh.write(outputYAML)
