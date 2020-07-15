@@ -24,10 +24,17 @@ TIMES=${TIMES:-1}
 # --max-parallel-tests
 PARALLEL=${PARALLEL:-0}
 
+export KUBECONFIG=/tests/kubeconfig 
+
+# https://superuser.com/q/363444/165006
+if ! WHOAMI=$(oc whoami 2>&1); then
+  die "${WHOAMI}" 2
+else
+  echo "Running the tests as ${WHOAMI}"
+fi
+
 DESTDIR=/tests/"$(date +%Y%m%d-%H%M%S)"
 mkdir -p "${DESTDIR}" || die "Error creating the ${DESTDIR} directory" 2
-
-export KUBECONFIG=/tests/kubeconfig 
 
 echo -n "Collecting the cluster status before running the tests..."
 # Get all the objects. Redirect stdout to avoid 
@@ -38,7 +45,6 @@ echo "Done"
 # Wait a few seconds to let the API settle
 # as we stressed it with the allobjects script
 sleep 10
-echo "Running the tests as $(oc whoami)"
 # If some tests fail, continue the execution
 /usr/bin/openshift-tests run --max-parallel-tests "${PARALLEL}" \
                              --count "${TIMES}" \
@@ -64,8 +70,8 @@ echo -n "Generating a cluster status diff before and after running the tests..."
 git diff --unified=0 \
          --word-diff-regex="[^[:space:]:]+" \
          "${DESTDIR}"/before.out \
-         "${DESTDIR}"/after.out > "${DESTDIR}"/diff.out || \
-        die "Error generating a cluster status diff" 2
+         "${DESTDIR}"/after.out > "${DESTDIR}"/diff.out && \
+        echo "There were no differences"
 echo "Done"
 
 exit 0
