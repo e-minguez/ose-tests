@@ -91,16 +91,19 @@ oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.exa
 
 ### Privileging The Non-Admin User
 
-Each test suite will eventually have its own role that empower the user account running the test to perform the actions required by the given tests suite. Presently this involves specific instructions for the openshift-conformance-minimal suite of tests and generic temporary instructions for the other test suites.
+Each test suite will eventually have its own role that empower the user account running the test to perform the actions required by the given tests suite. Presently this involves specific instructions for the `openshift-conformance-minimal` and `kubernetes-conformance` suites of tests and generic temporary instructions for the other test suites.
 
-#### For openshift-conformance-minimal Suite Tests
+#### For openshift-conformance-minimal and kubernetes-conformance Test Suites
 
-As a cluster-admin, create a custom cluster role that contains all the user rights required to run this suite by performing an oc create on [the file located in the rbac directory of this repository](rbac/osetests-ocp-minimal.yml).
+As `cluster-admin`, create a custom cluster role that contains all the user rights required to run this suite by performing an `oc create` on role definition located in the rbac directory of this repository. The role used depends on the test suite being ran:
+
+* [openshift-conformance-minimal](rbac/osetests-ocp-minimal.yaml)
+* [kubernetes-conformance](rbac/osetests-kubernetes-conformance.yaml)
 
 Example:
 
 ```bash
-oc create -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yml
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yaml
 ```
 
 It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user (again as the cluster-admin user from before):
