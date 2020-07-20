@@ -1,5 +1,12 @@
 # How to make the images available offline
 
+## Why cannot just mirror those images?
+
+The OpenShift cluster can be configured to redirect requests to pull images from a repository on a source image registry and have it resolved by a repository on a mirrored image registry. It uses an `ImageContentSourcePolicy` object that specifies the source reposit
+ory and the mirrored one. It also configures "mirror-by-digest-only = true" which makes pulling an image as "image:tag" skip the mirroring, which makes it not valid to be able to run the ose-tests as they images used are ['hardcoded'](https://github.com/kubernetes/kubernetes/blob/master/test/utils/image/manifest.go) to use image:tag.
+
+You can read more about this in [the official OCP documentation](https://docs.openshift.com/container-platform/4.4/openshift_images/image-configuration.html#images-configuration-registry-mirror_image-configuration) and the details in the [containers-registries.conf](https://github.com/containers/image/blob/master/docs/containers-registries.conf.5.md#remapping-and-mirroring-registries) man.
+
 ## oc debug in disconnected environments
 
 Currently, [there is an issue](https://bugzilla.redhat.com/show_bug.cgi?id=1728135) when using `oc debug node` in disconnected environments as it uses the `registry.redhat.io/rhel7/support-tools:latest` image by default (Which requires internet connectivity). The image is pulled using image:tag, so an `ImageContentSourcePolicy` won't work.
@@ -239,3 +246,4 @@ for node in $(oc get nodes -o name); do
 
 done
 ```
+
