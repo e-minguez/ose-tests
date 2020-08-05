@@ -97,6 +97,12 @@ Each test suite will eventually have its own role that empower the user account 
 
 As `cluster-admin`, create a custom cluster role that contains all the user rights required to run this suite by performing an `oc create` on role definition located in the rbac directory of this repository. The role used depends on the test suite being ran:
 
+* [all-non-disruptive](rbac/osetests-all-non-disruptive.yaml) - The default one.
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-all-non-disruptive.yaml
+```
+
 * [openshift-conformance-minimal](rbac/osetests-openshift-conformance-minimal.yaml)
 
 ```bash
@@ -118,8 +124,10 @@ oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/maste
 It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user (again as the cluster-admin user from before):
 
 ```bash
-oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
+oc adm policy add-cluster-role-to-user <cluster-role> nonadmin
 ```
+
+Where `<cluster-role>` is the cluster role created before (osetests-<suite>)
 
 and then wait another few minutes or so.
 

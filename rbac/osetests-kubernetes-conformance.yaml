@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: osetests-k8s-conformance
+  name: osetests-kubernetes-conformance
 rules:
 - apiGroups:
   - rbac.authorization.k8s.io
