@@ -91,19 +91,28 @@ oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.exa
 
 ### Privileging The Non-Admin User
 
-Each test suite will eventually have its own role that empower the user account running the test to perform the actions required by the given tests suite. Presently this involves specific instructions for the `openshift-conformance-minimal` and `kubernetes-conformance` suites of tests and generic temporary instructions for the other test suites.
+Each test suite will eventually have its own role that empower the user account running the test to perform the actions required by the given tests suite.
 
-#### For openshift-conformance-minimal and kubernetes-conformance Test Suites
+#### For each test suite
 
 As `cluster-admin`, create a custom cluster role that contains all the user rights required to run this suite by performing an `oc create` on role definition located in the rbac directory of this repository. The role used depends on the test suite being ran:
 
-* [openshift-conformance-minimal](rbac/osetests-ocp-minimal.yaml)
-* [kubernetes-conformance](rbac/osetests-kubernetes-conformance.yaml)
-
-Example:
+* [openshift-conformance-minimal](rbac/osetests-openshift-conformance-minimal.yaml)
 
 ```bash
-oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-ocp-minimal.yaml
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance-minimal.yaml
+```
+
+* [openshift-conformance](rbac/osetests-openshift-conformance.yaml)
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance.yaml
+```
+
+* [kubernetes-conformance](rbac/osetests-kubernetes-conformance.yaml)
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-kubernetes-conformance.yaml
 ```
 
 It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user (again as the cluster-admin user from before):
@@ -114,9 +123,12 @@ oc adm policy add-cluster-role-to-user osetests-ocp-minimal nonadmin
 
 and then wait another few minutes or so.
 
-#### For All Other Test Suites
+#### General permissions
 
-Create a self-provisioner-namespace cluster role that allows namespace creation/deletion and assign that cluster role to the user as well as the 'admin' role (no cluster-admin, just admin):
+If you don't want to create a specific cluster-role for each test suite, you can
+create a self-provisioner-namespace cluster role that allows namespace
+creation/deletion and assign that cluster role to the user as well as the
+'admin' role (no cluster-admin, just admin):
 
 ```bash
 # As a cluster-admin user:
