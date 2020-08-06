@@ -127,10 +127,22 @@ oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/maste
 oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance-excluded-non-disruptive.yaml
 ```
 
+* [openshift-network-stress](rbac/osetests-openshift-network-stress.yaml)
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-network-stress.yaml
+```
+
 * [kubernetes-conformance](rbac/osetests-kubernetes-conformance.yaml)
 
 ```bash
 oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-kubernetes-conformance.yaml
+```
+
+* [all-disruptive](rbac/osetests-all-disruptive.yaml) - The default one.
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-all-disruptive.yaml
 ```
 
 It's advisable to wait a few minutes to let the custom role propagate to avoid any potentially undesirable results. Once you're sure the role has successfully propagated you can assign it to the nonadmin user (again as the cluster-admin user from before):
@@ -139,7 +151,7 @@ It's advisable to wait a few minutes to let the custom role propagate to avoid a
 oc adm policy add-cluster-role-to-user <cluster-role> nonadmin
 ```
 
-Where `<cluster-role>` is the cluster role created before (osetests-<suite>)
+Where `<cluster-role>` is the cluster role created before (`osetests-<suite>`)
 
 and then wait another few minutes or so.
 

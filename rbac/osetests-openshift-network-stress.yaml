@@ -1,0 +1,1253 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: osetests-openshift-network-stress
+rules:
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - users
+  verbs:
+  - get
+- apiGroups:
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - list
+- apiGroups:
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - get
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - rolebindingrestrictions
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - list
+- apiGroups:
+  - quota.openshift.io
+  resources:
+  - clusterresourcequotas
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - podtemplates
+  verbs:
+  - list
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - nodes
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - replicationcontrollers
+  verbs:
+  - list
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - list
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - list
+- apiGroups:
+  - autoscaling.openshift.io
+  resources:
+  - machineautoscalers
+  verbs:
+  - list
+- apiGroups:
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - clusterroles
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - roles
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - resourceaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - rolebindings
+  verbs:
+  - list
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - localsubjectaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - selfsubjectaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - selfsubjectrulesreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - ingresses
+  verbs:
+  - list
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - featuregates
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - oauths
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - schedulers
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - networks
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - images
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - projects
+  verbs:
+  - list
+- apiGroups:
+  - cloudcredential.openshift.io
+  resources:
+  - credentialsrequests
+  verbs:
+  - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consoleyamlsamples
+  verbs:
+  - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consolelinks
+  verbs:
+  - list
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - list
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - list
+- apiGroups:
+  - imageregistry.operator.openshift.io
+  resources:
+  - configs
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreammappings
+  verbs:
+  - list
+- apiGroups:
+  - events.k8s.io
+  resources:
+  - events
+  verbs:
+  - list
+- apiGroups:
+  - ingress.operator.openshift.io
+  resources:
+  - dnsrecords
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreamtags
+  verbs:
+  - list
+- apiGroups:
+  - machine.openshift.io
+  resources:
+  - machinesets
+  verbs:
+  - list
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - containerruntimeconfigs
+  verbs:
+  - list
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - machineconfigs
+  verbs:
+  - list
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  verbs:
+  - list
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - podmonitors
+  verbs:
+  - list
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - prometheuses
+  verbs:
+  - list
+- apiGroups:
+  - network.openshift.io
+  resources:
+  - egressnetworkpolicies
+  verbs:
+  - list
+- apiGroups:
+  - network.openshift.io
+  resources:
+  - hostsubnets
+  verbs:
+  - list
+- apiGroups:
+  - network.openshift.io
+  resources:
+  - netnamespaces
+  verbs:
+  - list
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - list
+- apiGroups:
+  - node.k8s.io
+  resources:
+  - runtimeclasses
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - consoles
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - kubeapiservers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - kubeschedulers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - ingresscontrollers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - openshiftapiservers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - kubecontrollermanagers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - networks
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - etcds
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - catalogsourceconfigs
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - imagecontentsourcepolicies
+  verbs:
+  - list
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - operatorgroups
+  verbs:
+  - list
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  verbs:
+  - list
+- apiGroups:
+  - samples.operator.openshift.io
+  resources:
+  - configs
+  verbs:
+  - list
+- apiGroups:
+  - project.openshift.io
+  resources:
+  - projectrequests
+  verbs:
+  - list
+- apiGroups:
+  - quota.openshift.io
+  resources:
+  - appliedclusterresourcequotas
+  verbs:
+  - list
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  verbs:
+  - list
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - list
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - rangeallocations
+  verbs:
+  - list
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotcontents
+  verbs:
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - csinodes
+  verbs:
+  - list
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - csidrivers
+  verbs:
+  - list
+- apiGroups:
+  - template.openshift.io
+  resources:
+  - templateinstances
+  verbs:
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - volumeattachments
+  verbs:
+  - list
+- apiGroups:
+  - template.openshift.io
+  resources:
+  - brokertemplateinstances
+  verbs:
+  - list
+- apiGroups:
+  - tuned.openshift.io
+  resources:
+  - tuneds
+  verbs:
+  - list
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - useridentitymappings
+  verbs:
+  - list
+- apiGroups:
+  - whereabouts.cni.cncf.io
+  resources:
+  - ippools
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - networks
+  verbs:
+  - get
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - infrastructures
+  verbs:
+  - get
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - clusteroperators
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - clusterversions
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreams
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - serviceaccounts
+  verbs:
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - update
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - selfsubjectaccessreviews
+  verbs:
+  - create
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - endpoints
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - update
+- apiGroups:
+  - ''
+  resources:
+  - replicationcontrollers
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - endpoints
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - endpoints
+  verbs:
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - services
+  verbs:
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ''
+  resources:
+  - replicationcontrollers
+  verbs:
+  - get
+- apiGroups:
+  - ''
+  resources:
+  - replicationcontrollers
+  verbs:
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - nodes
+  verbs:
+  - watch
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - clusterversions
+  verbs:
+  - watch
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - clusteroperators
+  verbs:
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - persistentvolumes
+  verbs:
+  - list
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - localresourceaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - autoscaling.openshift.io
+  resources:
+  - clusterautoscalers
+  verbs:
+  - list
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - selfsubjectrulesreviews
+  verbs:
+  - list
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - builds
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - infrastructures
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - authentications
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - dnses
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreamimports
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagesignatures
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreams
+  verbs:
+  - list
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - list
+- apiGroups:
+  - imageregistry.operator.openshift.io
+  resources:
+  - imagepruners
+  verbs:
+  - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consoleexternalloglinks
+  verbs:
+  - list
+- apiGroups:
+  - machine.openshift.io
+  resources:
+  - machinehealthchecks
+  verbs:
+  - list
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - list
+- apiGroups:
+  - migration.k8s.io
+  resources:
+  - storagestates
+  verbs:
+  - list
+- apiGroups:
+  - migration.k8s.io
+  resources:
+  - storageversionmigrations
+  verbs:
+  - list
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  verbs:
+  - list
+- apiGroups:
+  - network.openshift.io
+  resources:
+  - clusternetworks
+  verbs:
+  - list
+- apiGroups:
+  - metal3.io
+  resources:
+  - baremetalhosts
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - servicecas
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - kubestorageversionmigrators
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - dnses
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - subscriptions
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - catalogsources
+  verbs:
+  - list
+- apiGroups:
+  - scheduling.k8s.io
+  resources:
+  - priorityclasses
+  verbs:
+  - list
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - podsecuritypolicyselfsubjectreviews
+  verbs:
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - list
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - podsecuritypolicysubjectreviews
+  verbs:
+  - list
+- apiGroups:
+  - tuned.openshift.io
+  resources:
+  - profiles
+  verbs:
+  - list
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - users
+  verbs:
+  - list
+- apiGroups:
+  - template.openshift.io
+  resources:
+  - processedtemplates
+  verbs:
+  - list
+- apiGroups:
+  - template.openshift.io
+  resources:
+  - templates
+  verbs:
+  - list
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - prometheusrules
+  verbs:
+  - list
+- apiGroups:
+  - oauth.openshift.io
+  resources:
+  - oauthclientauthorizations
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - openshiftcontrollermanagers
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - operatorsources
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - bindings
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - componentstatuses
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - limitranges
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - secrets
+  verbs:
+  - list
+- apiGroups:
+  - apiregistration.k8s.io
+  resources:
+  - apiservices
+  verbs:
+  - list
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - list
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - list
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - buildconfigs
+  verbs:
+  - list
+- apiGroups:
+  - certificates.k8s.io
+  resources:
+  - certificatesigningrequests
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - proxies
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - consoles
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - builds
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagetags
+  verbs:
+  - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consoleclidownloads
+  verbs:
+  - list
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - machineconfigpools
+  verbs:
+  - list
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - kubeletconfigs
+  verbs:
+  - list
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - nodes
+  verbs:
+  - list
+- apiGroups:
+  - metal3.io
+  resources:
+  - provisionings
+  verbs:
+  - list
+- apiGroups:
+  - oauth.openshift.io
+  resources:
+  - oauthclients
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - servicecatalogcontrollermanagers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - authentications
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - installplans
+  verbs:
+  - list
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - list
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterroles
+  verbs:
+  - list
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - serviceaccounts
+  verbs:
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - resourcequotas
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - clusterrolebindings
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - localsubjectaccessreviews
+  verbs:
+  - list
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - subjectrulesreviews
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - apiservers
+  verbs:
+  - list
+- apiGroups:
+  - config.openshift.io
+  resources:
+  - operatorhubs
+  verbs:
+  - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consolenotifications
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreamimages
+  verbs:
+  - list
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - images
+  verbs:
+  - list
+- apiGroups:
+  - machine.openshift.io
+  resources:
+  - machines
+  verbs:
+  - list
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - controllerconfigs
+  verbs:
+  - list
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - list
+- apiGroups:
+  - network.operator.openshift.io
+  resources:
+  - operatorpkis
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - servicecatalogapiservers
+  verbs:
+  - list
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - csisnapshotcontrollers
+  verbs:
+  - list
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - podsecuritypolicyreviews
+  verbs:
+  - list
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshotclasses
+  verbs:
+  - list
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - groups
+  verbs:
+  - list
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - identities
+  verbs:
+  - list
