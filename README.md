@@ -115,6 +115,18 @@ oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/maste
 oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance.yaml
 ```
 
+* [openshift-conformance-excluded-disruptive](rbac/osetests-openshift-conformance-excluded-disruptive.yaml)
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance-excluded-disruptive.yaml
+```
+
+* [openshift-conformance-excluded-non-disruptive](rbac/osetests-openshift-conformance-excluded-non-disruptive.yaml)
+
+```bash
+oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-openshift-conformance-excluded-non-disruptive.yaml
+```
+
 * [kubernetes-conformance](rbac/osetests-kubernetes-conformance.yaml)
 
 ```bash
