@@ -95,7 +95,7 @@ Each test suite will eventually have its own role that empower the user account 
 
 #### For each test suite
 
-As `cluster-admin`, create a custom cluster role that contains all the user rights required to run this suite by performing an `oc create` on role definition located in the rbac directory of this repository. The role used depends on the test suite being ran:
+As `cluster-admin`, create a custom cluster role that contains all the user rights required to run this suite by performing `oc auth reconcile` on role definition located in the rbac directory of this repository. The role used depends on the test suite being ran:
 
 * [all-non-disruptive](rbac/osetests-all-non-disruptive.yaml) - The default one.
 
@@ -139,7 +139,7 @@ oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/maste
 oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-kubernetes-conformance.yaml
 ```
 
-* [all-disruptive](rbac/osetests-all-disruptive.yaml) - The default one.
+* [all-disruptive](rbac/osetests-all-disruptive.yaml)
 
 ```bash
 oc auth reconcile -f https://raw.githubusercontent.com/e-minguez/ose-tests/master/rbac/osetests-all-disruptive.yaml
