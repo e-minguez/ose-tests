@@ -405,6 +405,21 @@ find -name openshift-conformance-minimal.txt -print0 | xargs -I {} -0 sh -c "awk
 find -name openshift-conformance-minimal.txt -print0 | xargs -I {} -0 sh -c "echo {}; awk '/Failing tests:/,0' {} | grep '^\[.*'"
 ```
 
+## Appendix - Run a custom list of tests
+
+If you want to run a custom list of tests (it can be a single one), you can create a file `custom-tests.txt` with the list of tests such as:
+
+```bash
+"[sig-cli] Kubectl client Kubectl patch should add annotations for pods in rc  [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+"[sig-apps] Job should delete a job [Conformance] [Suite:openshift/conformance/parallel/minimal] [Suite:k8s]"
+```
+
+And then run the container mounting that file into `/usr/local/share/ose-tests/` such as:
+
+```bash
+podman run --rm --name="ose-tests" -e TESTS="custom-tests" -v /path/to/my/local/custom-tests.txt:/usr/local/share/ose-tests/custom-tests.txt:Z -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+```
+
 ## Appendix - Compile your own openshift-tests binary in RHEL8
 
 Instead using the provisioned `openshift-tests` binary, this is the procedure to create a custom one in RHEL8
