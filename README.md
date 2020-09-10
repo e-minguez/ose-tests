@@ -224,55 +224,55 @@ If the OCP environment doesn't have internet connectivity, it is required to 'pr
 * [openshift-conformance-minimal](tests-lists/openshift-conformance-minimal.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance](tests-lists/openshift-conformance.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [kubernetes-conformance](tests-lists/kubernetes-conformance.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="kubernetes-conformance" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-network-stress](tests-lists/openshift-network-stress.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-network-stress" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance-excluded-non-disruptive](tests-lists/openshift-conformance-excluded-non-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [openshift-conformance-excluded-disruptive](tests-lists/openshift-conformance-excluded-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-conformance-excluded-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all-disruptive](tests-lists/all-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="all-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="all-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * [all-non-disruptive](tests-lists/all-non-disruptive.txt)
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 or
 
 ```bash
-podman run --rm --name="ose-tests" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 NOTE: When running rootless podman in RHEL8, an error similar to `ERRO[0546] unable to close namespace: "close /proc/33435/ns/user: bad file descriptor"` can happen. You can safely ignore the error message. What happens is that Podman closes all the files once it re-execs itself in the child user namespace, and the userns/mountns file descriptors were mistakenly closed twice. See [this issue](https://github.com/containers/libpod/issues/5626) for more information.
@@ -286,19 +286,19 @@ However, there are some parameters that can be used:
 * `TIMES` to run each test a specified number of times (1 by default or the test suite's preferred value) as:
 
 ```bash
-podman run --rm --name="ose-tests" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 * `PARALLEL` to specify the maximum number of tests running in parallel (0 by default to test suite recommended value, which is different in each suite) as:
 
 ```bash
-podman run --rm --name="ose-tests" -e PARALLEL="1" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e PARALLEL="1" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 NOTE: The parameters can be used simultaneously like:
 
 ```bash
-podman run --rm --name="ose-tests" -e PARALLEL="1" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e PARALLEL="1" -e TIMES="2" -e TESTS="all-non-disruptive" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 ## Explanations and files
@@ -368,7 +368,7 @@ NOTE: Due to the nature of OpenShift, some objects are constantly changing, such
 The tests can be executed in a for loop like:
 
 ```bash
-for i in {0..10}; do echo "Run $i"; podman run --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest; done
+for i in {0..10}; do echo "Run $i"; podman run --pull=always --rm --name="ose-tests" -e TESTS="openshift-conformance-minimal" -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest; done
 ```
 
 * Get tests passed/failed/skipped
@@ -417,7 +417,7 @@ If you want to run a custom list of tests (it can be a single one), you can crea
 And then run the container mounting that file into `/usr/local/share/ose-tests/` such as:
 
 ```bash
-podman run --rm --name="ose-tests" -e TESTS="custom-tests" -v /path/to/my/local/custom-tests.txt:/usr/local/share/ose-tests/custom-tests.txt:Z -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
+podman run --pull=always --rm --name="ose-tests" -e TESTS="custom-tests" -v /path/to/my/local/custom-tests.txt:/usr/local/share/ose-tests/custom-tests.txt:Z -v ${OUTPUTDIR}:/tests:Z quay.io/eminguez/ose-tests-full:latest
 ```
 
 ## Appendix - Compile your own openshift-tests binary in RHEL8
