@@ -76,17 +76,20 @@ Then create a 'nonadmin/nonadmin' user:
 oc get secret htpass-secret -ojsonpath="{.data.htpasswd}" -n openshift-config | base64 -d > "${OUTPUTDIR}"/users.htpasswd
 
 # Append the nonadmin user
-htpasswd -bB "${OUTPUTDIR}"/users.htpasswd nonadmin nonadmin
+export NONADMINUSER="nonadmin"
+export NONADMINPASS="nonadmin"
+htpasswd -bB "${OUTPUTDIR}"/users.htpasswd ${NONADMINUSER} ${NONADMINPASS}
 
 # Verify the file "${OUTPUTDIR}"/users.htpasswd contains at least the admin and nonadmin lines
 
 # Instead creating the secret with the here-doc syntax, you can use create secret instead
-oc create secret generic htpass-secret --from-file=htpasswd="${OUTPUTDIR}"/users.htpasswd --dry-run -o yaml -n openshift-config | oc replace -f -
+oc create secret generic htpass-secret --from-file=htpasswd="${OUTPUTDIR}"/users.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
 
 # This will generate a "${OUTPUTDIR}"/kubeconfig file
+export CLUSTERURL=$(oc whoami --show-server)
 export KUBECONFIG="${OUTPUTDIR}"/kubeconfig
 # It can take a few moments for the user to be created...
-oc login --insecure-skip-tls-verify=true -u nonadmin -p nonadmin https://api.example.com:6443
+oc login --insecure-skip-tls-verify=true -u ${NONADMINUSER} -p ${NONADMINPASS} ${CLUSTERURL}
 ```
 
 ### Privileging The Non-Admin User
