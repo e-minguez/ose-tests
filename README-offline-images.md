@@ -156,7 +156,7 @@ export IMAGES=(
       "gcr.io/authenticated-image-pulling/alpine:3.7"
       "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 
 # Create an empty tar file to store all the images
@@ -192,7 +192,7 @@ export IMAGES=(
       "gcr.io/authenticated-image-pulling/alpine:3.7"
       "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 
 for node in $(oc get nodes -o name); do
@@ -235,7 +235,7 @@ export IMAGES=(
       "gcr.io/authenticated-image-pulling/alpine:3.7"
       "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 
 for node in $(oc get nodes -o name); do
