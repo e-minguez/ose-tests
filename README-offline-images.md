@@ -3,7 +3,7 @@
 ## Why cannot just mirror those images?
 
 The OpenShift cluster can be configured to redirect requests to pull images from a repository on a source image registry and have it resolved by a repository on a mirrored image registry. It uses an `ImageContentSourcePolicy` object that specifies the source reposit
-ory and the mirrored one. It also configures "mirror-by-digest-only = true" which makes pulling an image as "image:tag" skip the mirroring, which makes it not valid to be able to run the ose-tests as they images used are ['hardcoded'](https://github.com/kubernetes/kubernetes/blob/master/test/utils/image/manifest.go) to use image:tag.
+ory and the mirrored one. It also configures "mirror-by-digest-only = true" which makes pulling an image as "image:tag" skip the mirroring, which makes it not valid to be able to run the ose-tests as they images used are ['hardcoded'](https://github.com/openshift/origin/blob/master/vendor/k8s.io/kubernetes/test/utils/image/manifest.go) to use image:tag.
 
 You can read more about this in [the official OCP documentation](https://docs.openshift.com/container-platform/4.4/openshift_images/image-configuration.html#images-configuration-registry-mirror_image-configuration) and the details in the [containers-registries.conf](https://github.com/containers/image/blob/master/docs/containers-registries.conf.5.md#remapping-and-mirroring-registries) man.
 
@@ -33,9 +33,9 @@ oc debug --image="${TOOLSIMAGE}"
 
 The following sections shows the images used by the tests so there is no need to perform these steps, it is just a reference.
 
-The list of registries and images that the tests use can be observed in the [test/utils/image/manifest.go](https://github.com/kubernetes/kubernetes/blob/master/test/utils/image/manifest.go).
+The list of registries and images that the tests use can be observed in the [test/utils/image/manifest.go](https://github.com/openshift/origin/blob/master/vendor/k8s.io/kubernetes/test/utils/image/manifest.go).
 
-The following snippet will output the list of images already pulled in the cluster:
+The following snippet will output the list of images already pulled in the cluster at the time of writting the document. Please check [the current list of images just in case](https://github.com/openshift/origin/blob/master/vendor/k8s.io/kubernetes/test/utils/image/manifest.go):
 
 ```bash
 export TOOLSIMAGE="registry.example.com/rhel7/support-tools:latest"
@@ -53,7 +53,7 @@ export IMAGES=(
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
@@ -66,7 +66,7 @@ export IMAGES=(
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
@@ -79,7 +79,7 @@ export IMAGES=(
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
@@ -88,7 +88,7 @@ export IMAGES=(
 ```bash
 export IMAGES=(
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
@@ -100,7 +100,7 @@ export IMAGES=(
       "docker.io/library/nginx:1.14-alpine"
       "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
@@ -131,7 +131,7 @@ export IMAGES=(
       "gcr.io/kubernetes-e2e-test-images/mounttest:1.0"
       "gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5"
       "k8s.gcr.io/pause:3.2"
-      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.12"
+      "us.gcr.io/k8s-artifacts-prod/e2e-test-images/agnhost:2.20"
       )
 ```
 
