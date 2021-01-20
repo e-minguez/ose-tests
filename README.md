@@ -1,5 +1,7 @@
 # ose-tests as non cluster-admin
 
+> :warning: This was a one time effort and no longer maintained. Refer to the official documentation.
+
 ## Prerequisites
 
 ### podman
